@@ -1,0 +1,19 @@
+{
+  "name": "site-schema-validator",
+  "version": "1.0.0",
+  "description": "Defines the schema for site ingestion and schema validation logic.",
+  "main": "validator.js",
+  "repository": "https://github.com/COVID-basic-needs/site-ingestion-schema.git",
+  "author": "Michael Man",
+  "license": "MIT",
+  "dependencies": {
+    "jsonschema": "^1.2.6"
+  },
+  "devDependencies": {
+    "assert": "^2.0.0",
+    "mocha": "^7.2.0"
+  },
+  "scripts": {
+    "test": "mocha --timeout 1000"
+  }
+}

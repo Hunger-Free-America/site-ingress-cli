@@ -1,0 +1,28 @@
+{
+    "name": "site-local-frankenstein",
+    "version": "0.0.0",
+    "description": "Frankenstein Dev App to locally upload Food Site Updates to Airtable for HungerFreeAmerica",
+    "main": "cli.ts",
+    "repository": "git@github.com:COVID-basic-needs/site-local-frankenstein.git",
+    "author": "Max Stuart <maxastuart@gmail.com>",
+    "license": "MIT",
+    "dependencies": {
+        "@types/node": "^13.13.4",
+        "airtable": "^0.8.1",
+        "csv-parse": "^4.9.0",
+        "dotenv": "^8.2.0",
+        "got": "^11.2.0",
+        "node-xlsx": "^0.15.0",
+        "ts-node": "^8.9.1",
+        "typescript": "^3.8.3",
+        "yaml": "^1.9.2"
+    },
+    "scripts": {
+        "start": "ts-node cli.ts"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^3.2.0",
+        "@typescript-eslint/parser": "^3.2.0",
+        "eslint": "^7.2.0"
+    }
+}
