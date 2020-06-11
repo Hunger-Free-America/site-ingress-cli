@@ -1,5 +1,3 @@
-'use strict';
-
 const pushToAirtable = require('./src/pushToAirtable');
 const validate = require('./site-ingestion-schema/validator');
 

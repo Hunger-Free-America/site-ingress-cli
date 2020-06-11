@@ -1,24 +1,22 @@
+'use strict';
+
 /**
  * Validates JSON input
- * 
+ *
  * Expect data format to be an array of objects, each with a site, siteDetails field
  */
 
 const Validator = require('jsonschema').Validator;
-const { dataSchema } = require("./schema");
-var v = new Validator();
+const { dataSchema } = require('./schema');
+const v = new Validator();
 
-// return true if valid body JSON
-// expect an array of JSON objects, each containing
-module.exports = function (data) {
-    for (i = 0; i < data.length; i++) {
-        let entry = data[i];
-        let valRes = v.validate(entry, dataSchema);
-        if (!valRes.valid) {
-            // return the first error message
-            return [false, `Invalid data format for entry ${i}: ${valRes.errors[0].property + " " + valRes.errors[0].message}`];
-        }
-    }
+// Returns a new object containing arrays of valid & invalid objects
+module.exports = (data) => {
 
-    return [true, null];
-}
+    return data.reduce((out, row) => {
+        v.validate(row, dataSchema).valid ? out.valid.push(row) : out.invalid.push(row);
+
+        return out;
+    }, { valid: [], invalid: [] });
+
+};
