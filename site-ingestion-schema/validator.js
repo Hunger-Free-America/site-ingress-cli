@@ -12,14 +12,12 @@ const v = new Validator();
 module.exports = (data) => {
 
     return data.reduce((out, row) => {
-        v.validate(row, dataSchema).valid ? out.valid.push(row) : out.invalid.push(row);
+        if (v.validate(row, dataSchema).valid) {
+            row.hasDetails = v.validate(row, detailsSchema).valid;
+            out.valid.push(row);
+        } else { out.invalid.push(row); }
 
         return out;
     }, { valid: [], invalid: [] });
 
-};
-
-module.exports.containsDetails = (object) => {
-    if (v.validate(object, detailsSchema).valid) { return true; }
-    return false;
 };

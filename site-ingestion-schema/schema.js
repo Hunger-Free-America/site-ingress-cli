@@ -57,7 +57,7 @@ module.exports.dataSchema = {
         notesGovRequests: { type: 'string' },
         notesAnythingElse: { type: 'string' },
         stockStatus: { type: 'string' },
-        reminderMethod: { type: 'string' },
+        reminderMethod: { type: 'string' }
     },
     required: ['siteName'],
 
@@ -82,9 +82,9 @@ module.exports.dataSchema = {
                 siteState: { type: 'string' }
             },
             required: ['siteCity', 'siteState']
-        },
+        }
     ],
-    throwError: false,
+    throwError: false
 };
 
 module.exports.detailsSchema = {
@@ -347,9 +347,9 @@ module.exports.detailsSchema = {
                 siteState: { type: 'string' }
             },
             required: ['siteCity', 'siteState']
-        },
+        }
     ],
-    throwError: false,
+    throwError: false
 };
 
 module.exports.populateSiteFields = (site, fromEmail, updateMethod) => {

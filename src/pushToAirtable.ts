@@ -1,13 +1,12 @@
 /**
  * Pushes data to Airtable Sites table, then push associated details to Site Details table.
  *
- * Dependant on password from CLI tool for /upload-site to not push the actual base rather than TEST.
+ * Dependant on password from CLI tool to push to the actual Airtable base rather than TEST.
  */
 
 require('dotenv').config();
 const Airtable = require('airtable');
 const { populateSiteFields, populateDetailsFields } = require('../site-ingestion-schema/schema');
-const { containsDetails } = require('../site-ingestion-schema/validator');
 const updateMethod = 'Upload local.v0: github.com/COVID-basic-needs/site-local-frankenstein';
 
 // same formula as the one in AirTable to generate the 'unique' site identifier
@@ -26,7 +25,8 @@ module.exports = async (siteList, email, password) => {
         const detailsTable = base(process.env.AIRTABLE_SITE_DETAILS);
         const dupedSiteDetails = [];
         const newSites = [];
-        let preExistingSites = 0;
+        let newDetailsCount = 0;
+        let preExistingSitesCount = 0;
         let originalSites;
 
         console.log('Pulling sites table to check for pre-existing sites...');
@@ -49,9 +49,9 @@ module.exports = async (siteList, email, password) => {
         siteList.forEach((site) => {
             const siteID = getSiteID(site);
             if (originalSites[siteID]) {
-                preExistingSites += 1;
+                preExistingSitesCount += 1;
                 // on duplicate & non-empty details, add site details (with Site's record id) to dupedSiteDetails list
-                if (containsDetails(site)) {
+                if (site.hasDetails) {
                     const details = populateDetailsFields(site, originalSites[siteID], email, updateMethod);
                     dupedSiteDetails.push(details);
                 }
@@ -60,7 +60,7 @@ module.exports = async (siteList, email, password) => {
             }
         });
 
-        console.log(`Found ${preExistingSites} pre-existing (duplicate) Sites, and ${dupedSiteDetails.length} valid details for them. Uploading those details..`);
+        console.log(`Found ${preExistingSitesCount} pre-existing (duplicate) Sites and ${dupedSiteDetails.length} valid details for them. Now uploading those details..`);
 
         // push details corresponded to duped sites
         for (let i = 0; i < dupedSiteDetails.length; i += 10) {
@@ -83,7 +83,11 @@ module.exports = async (siteList, email, password) => {
                 try {
                     // create the 10 siteDetails objects with corresponding Site record IDs
                     const tenSiteDetails = records.reduce((out, record, i) => {
-                        out.push(populateDetailsFields(tenSites[i], record.id, email, updateMethod));
+                        // skip uploading details on sites where there are none
+                        if (tenSites[i].hasDetails) {
+                            out.push(populateDetailsFields(tenSites[i], record.id, email, updateMethod));
+                            newDetailsCount += 1;
+                        }
                         return out;
                     }, []);
 
@@ -95,7 +99,7 @@ module.exports = async (siteList, email, password) => {
             });
         }
 
-        console.log(`Created ${newSites.length} new Sites + new relevant details.`); // TODO: ADD REAL # DETAILS PUSHED HERE
+        console.log(`Created ${newSites.length} new Sites + ${newDetailsCount} new relevant details.`); // TODO: ADD REAL # DETAILS PUSHED HERE
 
     } catch (err) {
         console.error('Error in pushToAirtable');

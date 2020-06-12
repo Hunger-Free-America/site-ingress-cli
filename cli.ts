@@ -7,7 +7,7 @@ const pushToAirtable = require('./src/pushToAirtable');
 const validate = require('./site-ingestion-schema/validator');
 const { promises: fs } = require('fs');
 
-const format = `Format:
+const cliFormat = `Format:
 
     yarn start <yamlFieldMapPath> <email> <password>
 
@@ -25,14 +25,14 @@ Please specify an existing .yaml fieldMap file, or a directory of them. `;
         const email = process.argv[3];
         const password = process.argv[4];
 
-        if (!path) throw new Error(missingFieldMap + format);
+        if (!path) throw new Error(missingFieldMap + cliFormat);
 
         const pathType = await fs.stat(path);
 
         if (!email) {
             throw new Error(`
 
-You must include your email. ` + format);
+You must include your email. ` + cliFormat);
         }
 
         if (pathType.isFile() && (path.endsWith('.yaml') || path.endsWith('.yml'))) {
