@@ -20,62 +20,66 @@ Please specify an existing .yaml fieldMap file, or a directory of them. `;
 
 (async () => {
 
-    let data = [];
-    const path = process.argv[2];
-    const email = process.argv[3];
-    const password = process.argv[4];
+    try {
+        let data = [];
+        const path = process.argv[2];
+        const email = process.argv[3];
+        const password = process.argv[4];
 
-    if (!path) throw new Error(missingFieldMap + format);
+        if (!path) throw new Error(missingFieldMap + format);
 
-    const pathType = await fs.stat(path);
+        const pathType = await fs.stat(path);
 
-    if (!email) {
-        throw new Error(`
+        if (!email) {
+            throw new Error(`
 
 You must include your email. ` + format);
-    }
-
-    if (pathType.isFile() && (path.endsWith('.yaml') || path.endsWith('.yml'))) {
-
-        console.log(`Parsing file '${path}'...`);
-
-        data = await convert(path);
-
-    } else if (pathType.isDirectory()) {
-
-        console.log(`Parsing directory '${path}'...`);
-
-        const dirContents = await fs.readdir(path);
-        const yamlFieldMaps = dirContents
-            .filter((file: string) => (file.endsWith('.yml') || file.endsWith('.yaml')));
-
-        if (!yamlFieldMaps.length) throw new Error(missingFieldMap);
-
-        for await (const yamlFile of yamlFieldMaps) {
-            for await (const object of await convert(`${path}/${yamlFile}`)) {
-                data.push(object);
-            }
         }
-    } else {
-        throw new Error(missingFieldMap);
+
+        if (pathType.isFile() && (path.endsWith('.yaml') || path.endsWith('.yml'))) {
+
+            console.log(`Parsing file '${path}'...`);
+
+            data = await convert(path);
+
+        } else if (pathType.isDirectory()) {
+
+            console.log(`Parsing directory '${path}'...`);
+
+            const dirContents = await fs.readdir(path);
+            const yamlFieldMaps = dirContents
+                .filter((file: string) => (file.endsWith('.yml') || file.endsWith('.yaml')));
+
+            if (!yamlFieldMaps.length) throw new Error(missingFieldMap);
+
+            for await (const yamlFile of yamlFieldMaps) {
+                for await (const object of await convert(`${path}/${yamlFile}`)) {
+                    data.push(object);
+                }
+            }
+        } else {
+            throw new Error(missingFieldMap);
+        }
+
+        // check if sites conform to schema
+        const checked = validate(data);
+        if (!checked.valid.length) {
+            throw new Error('No sites passed validation. Aborting.');
+        } else if (checked.invalid.length) {
+            console.error(`${checked.invalid.length} sites did not pass validation and will not be included: ${checked.invalid}`);
+        } else {
+            console.log('All sites passed validation.');
+        }
+
+        console.log(`Done converting, beginning push of ${checked.valid.length} records to site ingestion API... (lets see if your password worked ;P)`);
+
+        // attempt to push to Airtable
+        const [sitesAdded, siteDetailsAdded] = await pushToAirtable(checked.valid, email, password);
+
+        console.log(`Added ${sitesAdded} new sites and ${siteDetailsAdded} new site details`);
+    } catch (err) {
+        console.error(err);
     }
-
-    // check if sites conform to schema
-    const checked = validate(data);
-    if (!checked.valid.length) {
-        throw new Error('No sites passed validation. Aborting.');
-    } else if (checked.invalid.length) {
-        console.error(`${checked.invalid.length} sites did not pass validation and will not be included: ${checked.invalid}`);
-    } else {
-        console.log('All sites passed validation.');
-    }
-
-    console.log(`Done converting, beginning push of ${checked.valid.length} records to site ingestion API... (lets see if your password worked ;P)`);
-
-    // attempt to push to Airtable
-    const [sitesAdded, siteDetailsAdded] = await pushToAirtable(checked.valid, email, password);
-
-    console.log(`Added ${sitesAdded} new sites and ${siteDetailsAdded} new site details`);
 })();
 
 // const url = 'https://i3tmnkgp2i.execute-api.us-west-2.amazonaws.com/upload-site';
