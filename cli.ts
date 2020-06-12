@@ -5,7 +5,6 @@
 import convert from './convert';
 const pushToAirtable = require('./src/pushToAirtable');
 const validate = require('./site-ingestion-schema/validator');
-// const got = require('got');
 const { promises: fs } = require('fs');
 
 const format = `Format:
@@ -81,18 +80,3 @@ You must include your email. ` + format);
         console.error(err);
     }
 })();
-
-// const url = 'https://i3tmnkgp2i.execute-api.us-west-2.amazonaws.com/upload-site';
-// const url = 'http://localhost:3000/upload-site';
-
-// async function uploadToLambda(data, email, password) {
-//     try {
-//         const { body } = await got.post(url, {
-//             json: { data, email, password },
-//             responseType: 'json',
-//         });
-//         console.log(body);
-//     } catch (err) {
-//         console.error('Server returned: ' + err.response.statusCode + '\n' + JSON.stringify(err.response.body));
-//     }
-// }

@@ -10,11 +10,11 @@ const { populateSiteFields, populateDetailsFields } = require('../site-ingestion
 
 const updateMethod = 'Upload local.v0: github.com/COVID-basic-needs/site-local-frankenstein';
 
-// same formula as the one in AirTable to generate the "unique" site identifier
-function getSiteID (site) {
+// same formula as the one in AirTable to generate the 'unique' site identifier
+const getSiteID = (site) => {
     const joined = `${site.siteName} - ${site.siteStreetAddress}, ${site.siteCity} ${site.siteState} ${`${site.siteZip}`}`;
     return joined.replace('\n', ' ');
-}
+};
 
 module.exports = async (siteList, email, password) => {
     const base = new Airtable({
@@ -27,6 +27,7 @@ module.exports = async (siteList, email, password) => {
     let originalSites;
 
     console.log('Pulling sites table to deduplicate...');
+
     // returns an object with keys:siteIDs & values:airtableRecordIDs
     try {
         originalSites = await (await sitesTable.select({ fields: ['siteID'] }).all())
@@ -38,7 +39,7 @@ module.exports = async (siteList, email, password) => {
         console.error('Error fetching current sites table:');
         throw err;
     }
-    console.log(originalSites);
+
     console.log(`Fetched ${Object.keys(originalSites).length} rows from the sites table`);
 
     // filter out the site details corresponding to existing sites to be uploaded separately
@@ -48,14 +49,16 @@ module.exports = async (siteList, email, password) => {
     // filter out duplicates from list
     siteList.forEach((site) => {
         const siteID = getSiteID(site);
-        if (originalSites.has(siteID)) {
-            // on duplicate, add site details (with row id) to separate list
-            const details = populateDetailsFields(site, originalSites.get(siteID), email, updateMethod);
+        if (originalSites[siteID]) {
+            // on duplicate, add site details (with Site's record id) to separate list
+            const details = populateDetailsFields(site, originalSites[siteID], email, updateMethod);
             dupedSiteDetails.push(details);
         } else {
             newSites.push(site);
         }
     });
+
+    // -------------------------------------------------------------------------------------------------- //
 
     // promises to await on
     const promises = [];
@@ -63,37 +66,44 @@ module.exports = async (siteList, email, password) => {
     // Airtable's create API only allows 10 at a time, so we batch.
     // (there is a rate limit, but their SDK has builtin retry logic so we should be safe)
     for (let i = 0; i < newSites.length; i += 10) {
-        const tenSites = newSites.slice(i, i + 10 < total ? i + 10 : total);
+        const numToSlice = i + 10 < total ? i + 10 : total;
+        const tenSites = newSites.slice(i, numToSlice);
 
         // create a list of 10 site objects to be pushed to the table
         const tenSiteLocations = tenSites.map((site) => populateSiteFields(site, email, updateMethod));
-
-        const p = new Promise((resolve, reject) => {
-            sitesTable.create(tenSiteLocations, { typecast: true }, async (err, records) => {
-                if (err) {
-                    console.error(err);
-                    reject(err);
-                }
-
-                // create a list of the 10 site details objects
-                const tenSiteDetails = [];
-                for (let i = 0; i < records.length; i += 1) {
-                    // create details field with corresponding site object and row id
-                    tenSiteDetails.push(populateDetailsFields(tenSites[i], records[i].getId(), email, updateMethod));
-                }
-
-                // push details objects to Airtable
-                detailsTable.create(tenSiteDetails, { typecast: true }, async (err, records) => {
-                    if (err) {
-                        console.error(err);
-                        reject(err);
-                    }
-                    resolve();
-                });
-            });
+        const tenSiteIds = [];
+        await sitesTable.create(tenSiteLocations, { typecast: true }).then(records => {
+            records.forEach(record => tenSiteIds.push(record.id));
         });
+        console.log('tenSiteIds = ', tenSiteIds);
+        throw new Error('stop here');
 
-        promises.push(p);
+        // const p = new Promise((resolve, reject) => {
+        //     sitesTable.create(tenSiteLocations, { typecast: true }, async (err, records) => {
+        //         if (err) {
+        //             console.error(err);
+        //             reject(err);
+        //         }
+
+        //         // create a list of the 10 site details objects
+        //         const tenSiteDetails = [];
+        //         for (let i = 0; i < records.length; i += 1) {
+        //             // create details field with corresponding site object and row id
+        //             tenSiteDetails.push(populateDetailsFields(tenSites[i], records[i].getId(), email, updateMethod));
+        //         }
+
+        //         // push details objects to Airtable
+        //         detailsTable.create(tenSiteDetails, { typecast: true }, async (err, records) => {
+        //             if (err) {
+        //                 console.error(err);
+        //                 reject(err);
+        //             }
+        //             resolve();
+        //         });
+        //     });
+        // });
+
+        // promises.push(p);
     }
 
     // push details corresponded to duped sites

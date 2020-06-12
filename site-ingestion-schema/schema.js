@@ -1,5 +1,3 @@
-'use strict';
-
 /*
  * Defines the data schema and functions for creating site/site detail objects
  */
