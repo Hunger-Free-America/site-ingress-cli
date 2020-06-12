@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Validates JSON input
  *
@@ -7,7 +5,7 @@
  */
 
 const Validator = require('jsonschema').Validator;
-const { dataSchema } = require('./schema');
+const { dataSchema, detailsSchema } = require('./schema');
 const v = new Validator();
 
 // Returns a new object containing arrays of valid & invalid objects
@@ -19,4 +17,9 @@ module.exports = (data) => {
         return out;
     }, { valid: [], invalid: [] });
 
+};
+
+module.exports.containsDetails = (object) => {
+    if (v.validate(object, detailsSchema).valid) { return true; }
+    return false;
 };

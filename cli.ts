@@ -65,7 +65,7 @@ You must include your email. ` + format);
         if (!checked.valid.length) {
             throw new Error('No sites passed validation. Aborting.');
         } else if (checked.invalid.length) {
-            console.error(`${checked.invalid.length} sites did not pass validation and will not be included: ${checked.invalid}`);
+            console.error(`${checked.invalid.length} sites did not pass validation and will not be included: ${JSON.stringify(checked.invalid)}`);
         } else {
             console.log('All sites passed validation.');
         }
@@ -73,9 +73,7 @@ You must include your email. ` + format);
         console.log(`Done converting, beginning push of ${checked.valid.length} records to site ingestion API... (lets see if your password worked ;P)`);
 
         // attempt to push to Airtable
-        const [sitesAdded, siteDetailsAdded] = await pushToAirtable(checked.valid, email, password);
-
-        console.log(`Added ${sitesAdded} new sites and ${siteDetailsAdded} new site details`);
+        await pushToAirtable(checked.valid, email, password);
     } catch (err) {
         console.error(err);
     }
