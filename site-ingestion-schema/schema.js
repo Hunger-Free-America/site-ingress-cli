@@ -1,87 +1,405 @@
-/**
- * Defines the data schema and functions for creating site/site detail objects
- */
-
 module.exports.dataSchema = {
     id: '/dataSchema',
     type: 'object',
     properties: {
-        siteName: { type: 'string' },
-        siteStreetAddress: { type: 'string' },
-        siteCity: { type: 'string' },
-        siteState: { type: 'string' },
-        siteZip: { type: 'string' },
-        siteCountry: { type: 'string' },
-        siteCounty: { type: 'string' },
-        siteNeighborhood: { type: 'string' },
-        siteType: { type: 'string' },
-        siteSubType: { type: 'string' },
-        lat: { type: 'string' },
-        lng: { type: 'string' },
-        EFROID: { type: 'string' },
-        publicContactMethod: { type: 'string' },
-        publicPhone: { type: 'string' },
-        publicEmail: { type: 'string' },
-        website: { type: 'string' },
-        socialMedia: { type: 'string' },
-        contactName: { type: 'string' },
-        contactPhone: { type: 'string' },
-        contactEmail: { type: 'string' },
-        status: { type: 'string' },
-        publicOpenness: { type: 'string' },
-        deliveryEligibility: { type: 'string' },
-        eligibilityRequirements: { type: 'string' },
-        hoursEligibility1: { type: 'string' },
-        hours1: { type: 'string' },
-        hoursEligibility2: { type: 'string' },
-        hours2: { type: 'string' },
-        hoursEligibility3: { type: 'string' },
-        hours3: { type: 'string' },
-        validUntil: { type: 'string' },
-        acceptsFoodDonations: { type: 'string' },
-        hasEnoughFood: { type: 'string' },
-        canReceiveBulk: { type: 'string' },
-        foodNeeds: { type: 'string' },
-        hasBabyFormula: { type: 'string' },
-        staffVolunteerNeeds: { type: 'string' },
-        recruitingAssistance: { type: 'string' },
-        otherNeeds: { type: 'string' },
-        covidChanges: { type: 'string' },
-        increasedDemandCauses: { type: 'string' },
-        totalFoodCommunityNeeds: { type: 'string' },
-        currentCapacity: { type: 'string' },
-        staffVolunteerReduction: { type: 'string' },
-        safetyPrecautions: { type: 'string' },
-        languages: { type: 'string' },
-        nearbyFoodPrograms: { type: 'string' },
-        notesGovRequests: { type: 'string' },
-        notesAnythingElse: { type: 'string' },
-        stockStatus: { type: 'string' },
-        reminderMethod: { type: 'string' }
+        siteName: { type: 'string', minLength: 3, maxLength: 174 },
+        siteStreetAddress: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 183 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        siteCity: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 183 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        siteState: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 2, maxLength: 2 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        siteZip: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 4, maxLength: 10 },
+                { maxLength: 0 },
+                { const: '601' }
+            ]},
+            else: { type: null }
+        },
+        siteCountry: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 74 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        siteCounty: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 74 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        siteNeighborhood: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 183 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        siteType: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 74 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        siteSubType: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 74 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        lat: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 2, maxLength: 74 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        lng: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 2, maxLength: 74 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        EFROID: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 2, maxLength: 10 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        publicContactMethod: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 174 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        publicPhone: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 7, maxLength: 174 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        publicEmail: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 6, maxLength: 255 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        website: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 4, maxLength: 255 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        socialMedia: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 255 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        contactName: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 255 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        contactPhone: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 7, maxLength: 174 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        contactEmail: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 6, maxLength: 255 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        status: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 4, maxLength: 255 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        publicOpenness: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 255 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        deliveryEligibility: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        eligibilityRequirements: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        hoursEligibility1: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        hours1: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        hoursEligibility2: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        hours2: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        hoursEligibility3: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        hours3: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        validUntil: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        acceptsFoodDonations: {
+            anyOf: [{ type: 'string' }, { type: null }]
+        },
+        hasEnoughFood: {
+            anyOf: [{ type: 'string' }, { type: null }]
+        },
+        canReceiveBulk: {
+            anyOf: [{ type: 'string' }, { type: null }]
+        },
+        foodNeeds: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        hasBabyFormula: {
+            anyOf: [{ type: 'string' }, { type: null }]
+        },
+        staffVolunteerNeeds: {
+            anyOf: [{ type: 'string' }, { type: null }]
+        },
+        recruitingAssistance: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        otherNeeds: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        covidChanges: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        increasedDemandCauses: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        totalFoodCommunityNeeds: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        currentCapacity: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 2 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        staffVolunteerReduction: {
+            anyOf: [{ type: 'string' }, { type: null }]
+        },
+        safetyPrecautions: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        languages: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 2 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        nearbyFoodPrograms: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        notesGovRequests: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        notesAnythingElse: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        },
+        stockStatus: {
+            anyOf: [{ type: 'string' }, { type: null }]
+        },
+        reminderMethod: {
+            if: { type: 'string' },
+            then: { anyOf: [
+                { minLength: 3, maxLength: 255 },
+                { maxLength: 0 }
+            ]},
+            else: { type: null }
+        }
     },
-    required: ['siteName'],
 
     // accept address in any of the following forms
     // TODO: add state validation
     anyOf: [
         {
             properties: {
-                siteStreetAddress: { type: 'string' }
-            },
-            required: ['siteStreetAddress']
+                siteStreetAddress: { minLength: 3, maxLength: 183 }
+            }
         },
         {
             properties: {
-                siteZip: { type: 'string' }
-            },
-            required: ['siteZip']
+                siteZip: { anyOf: [
+                    { minLength: 4, maxLength: 10 },
+                    { const: '601' }
+                ]}
+            }
         },
         {
             properties: {
-                siteCity: { type: 'string' },
-                siteState: { type: 'string' }
-            },
-            required: ['siteCity', 'siteState']
+                siteCity: { minLength: 3, maxLength: 183 },
+                siteState: { minLength: 2, maxLength: 2 }
+            }
         }
     ],
     throwError: false
@@ -91,262 +409,203 @@ module.exports.detailsSchema = {
     id: '/detailsSchema',
     type: 'object',
     properties: this.dataSchema.properties,
-    required: ['siteName'],
 
     // checks if any details fields exist
     anyOf: [
         {
             properties: {
-                publicContactMethod: { type: 'string' }
-            },
-            required: ['publicContactMethod']
+                publicContactMethod: { minLength: 3, maxLength: 174 }
+            }
         },
         {
             properties: {
-                publicPhone: { type: 'string' }
-            },
-            required: ['publicPhone']
+                publicPhone: { minLength: 7, maxLength: 174 }
+            }
         },
         {
             properties: {
-                publicEmail: { type: 'string' }
-            },
-            required: ['publicEmail']
+                publicEmail: { minLength: 6, maxLength: 255 }
+            }
         },
         {
             properties: {
-                website: { type: 'string' }
-            },
-            required: ['website']
+                website: { minLength: 4, maxLength: 255 }
+            }
         },
         {
             properties: {
-                socialMedia: { type: 'string' }
-            },
-            required: ['socialMedia']
+                socialMedia: { minLength: 3, maxLength: 255 }
+            }
         },
         {
             properties: {
-                contactName: { type: 'string' }
-            },
-            required: ['contactName']
+                contactName: { minLength: 3, maxLength: 255 }
+            }
         },
         {
             properties: {
-                contactPhone: { type: 'string' }
-            },
-            required: ['contactPhone']
+                contactPhone: { minLength: 7, maxLength: 174 }
+            }
         },
         {
             properties: {
-                contactEmail: { type: 'string' }
-            },
-            required: ['contactEmail']
+                contactEmail: { minLength: 6, maxLength: 255 }
+            }
         },
         {
             properties: {
-                status: { type: 'string' }
-            },
-            required: ['status']
+                status: { minLength: 4, maxLength: 255 }
+            }
         },
         {
             properties: {
-                publicOpenness: { type: 'string' }
-            },
-            required: ['publicOpenness']
+                publicOpenness: { minLength: 3, maxLength: 255 }
+            }
         },
         {
             properties: {
-                deliveryEligibility: { type: 'string' }
-            },
-            required: ['deliveryEligibility']
+                deliveryEligibility: { minLength: 3 }
+            }
         },
         {
             properties: {
-                eligibilityRequirements: { type: 'string' }
-            },
-            required: ['eligibilityRequirements']
+                eligibilityRequirements: { minLength: 3 }
+            }
         },
         {
             properties: {
-                hoursEligibility1: { type: 'string' }
-            },
-            required: ['hoursEligibility1']
+                hoursEligibility1: { minLength: 3 }
+            }
         },
         {
             properties: {
-                hours1: { type: 'string' }
-            },
-            required: ['hours1']
+                hours1: { minLength: 3 }
+            }
         },
         {
             properties: {
-                hoursEligibility2: { type: 'string' }
-            },
-            required: ['hoursEligibility2']
+                hoursEligibility2: { minLength: 3 }
+            }
         },
         {
             properties: {
-                hours2: { type: 'string' }
-            },
-            required: ['hours2']
+                hours2: { minLength: 3 }
+            }
         },
         {
             properties: {
-                hoursEligibility3: { type: 'string' }
-            },
-            required: ['hoursEligibility3']
+                hoursEligibility3: { minLength: 3 }
+            }
         },
         {
             properties: {
-                hours3: { type: 'string' }
-            },
-            required: ['hours3']
+                hours3: { minLength: 3 }
+            }
         },
         {
             properties: {
-                validUntil: { type: 'string' }
-            },
-            required: ['validUntil']
+                validUntil: { minLength: 3 }
+            }
         },
         {
             properties: {
-                acceptsFoodDonations: { type: 'string' }
-            },
-            required: ['acceptsFoodDonations']
+                acceptsFoodDonations: { minLength: 1 }
+            }
         },
         {
             properties: {
-                hasEnoughFood: { type: 'string' }
-            },
-            required: ['hasEnoughFood']
+                hasEnoughFood: { minLength: 1 }
+            }
         },
         {
             properties: {
-                canReceiveBulk: { type: 'string' }
-            },
-            required: ['canReceiveBulk']
+                canReceiveBulk: { minLength: 1 }
+            }
         },
         {
             properties: {
-                foodNeeds: { type: 'string' }
-            },
-            required: ['foodNeeds']
+                foodNeeds: { minLength: 3 }
+            }
         },
         {
             properties: {
-                hasBabyFormula: { type: 'string' }
-            },
-            required: ['hasBabyFormula']
+                hasBabyFormula: { minLength: 1 }
+            }
         },
         {
             properties: {
-                staffVolunteerNeeds: { type: 'string' }
-            },
-            required: ['staffVolunteerNeeds']
+                staffVolunteerNeeds: { minLength: 1 }
+            }
         },
         {
             properties: {
-                recruitingAssistance: { type: 'string' }
-            },
-            required: ['recruitingAssistance']
+                recruitingAssistance: { minLength: 3 }
+            }
         },
         {
             properties: {
-                otherNeeds: { type: 'string' }
-            },
-            required: ['otherNeeds']
+                otherNeeds: { minLength: 3 }
+            }
         },
         {
             properties: {
-                covidChanges: { type: 'string' }
-            },
-            required: ['covidChanges']
+                covidChanges: { minLength: 3 }
+            }
         },
         {
             properties: {
-                increasedDemandCauses: { type: 'string' }
-            },
-            required: ['increasedDemandCauses']
+                increasedDemandCauses: { minLength: 3 }
+            }
         },
         {
             properties: {
-                totalFoodCommunityNeeds: { type: 'string' }
-            },
-            required: ['totalFoodCommunityNeeds']
+                totalFoodCommunityNeeds: { minLength: 3 }
+            }
         },
         {
             properties: {
-                currentCapacity: { type: 'string' }
-            },
-            required: ['currentCapacity']
+                currentCapacity: { minLength: 2 }
+            }
         },
         {
             properties: {
-                staffVolunteerReduction: { type: 'string' }
-            },
-            required: ['staffVolunteerReduction']
+                staffVolunteerReduction: { minLength: 1 }
+            }
         },
         {
             properties: {
-                safetyPrecautions: { type: 'string' }
-            },
-            required: ['safetyPrecautions']
+                safetyPrecautions: { minLength: 3 }
+            }
         },
         {
             properties: {
-                languages: { type: 'string' }
-            },
-            required: ['languages']
+                languages: { minLength: 2 }
+            }
         },
         {
             properties: {
-                nearbyFoodPrograms: { type: 'string' }
-            },
-            required: ['nearbyFoodPrograms']
+                nearbyFoodPrograms: { minLength: 3 }
+            }
         },
         {
             properties: {
-                notesGovRequests: { type: 'string' }
-            },
-            required: ['notesGovRequests']
+                notesGovRequests: { minLength: 3 }
+            }
         },
         {
             properties: {
-                notesAnythingElse: { type: 'string' }
-            },
-            required: ['notesAnythingElse']
+                notesAnythingElse: { minLength: 3 }
+            }
         },
         {
             properties: {
-                stockStatus: { type: 'string' }
-            },
-            required: ['stockStatus']
+                stockStatus: { minLength: 1 }
+            }
         },
         {
             properties: {
-                reminderMethod: { type: 'string' }
-            },
-            required: ['reminderMethod']
-        },
-        {
-            properties: {
-                siteStreetAddress: { type: 'string' }
-            },
-            required: ['siteStreetAddress']
-        },
-        {
-            properties: {
-                siteZip: { type: 'string' }
-            },
-            required: ['siteZip']
-        },
-        {
-            properties: {
-                siteCity: { type: 'string' },
-                siteState: { type: 'string' }
-            },
-            required: ['siteCity', 'siteState']
+                reminderMethod: { minLength: 3, maxLength: 255 }
+            }
         }
     ],
     throwError: false
@@ -361,7 +620,7 @@ module.exports.populateSiteFields = (site, fromEmail, updateMethod) => {
             siteStreetAddress: site.siteStreetAddress,
             siteCity: site.siteCity,
             siteState: site.siteState,
-            siteZip: site.siteZip ? site.siteZip + '' : null,
+            siteZip: site.siteZip,
             siteCountry: site.siteCountry,
             siteCounty: site.siteCounty,
             siteNeighborhood: site.siteNeighborhood,
@@ -381,7 +640,7 @@ module.exports.populateDetailsFields = (site, id, fromEmail, updateMethod) => {
             uploadedBy: { email: fromEmail },
             status: site.status,
             contactName: site.contactName,
-            contactPhone: site.contactPhone ? site.contactPhone + '' : null,
+            contactPhone: site.contactPhone,
             contactEmail: site.contactEmail,
             publicOpenness: site.publicOpenness,
             deliveryEligibility: site.deliveryEligibility,
@@ -402,7 +661,7 @@ module.exports.populateDetailsFields = (site, id, fromEmail, updateMethod) => {
             recruitingAssistance: site.recruitingAssistance,
             otherNeeds: site.otherNeeds,
             publicContactMethod: site.publicContactMethod,
-            publicPhone: site.publicPhone ? site.publicPhone + '' : null,
+            publicPhone: site.publicPhone,
             publicEmail: site.publicEmail,
             website: site.website,
             socialMedia: site.socialMedia,
@@ -415,7 +674,7 @@ module.exports.populateDetailsFields = (site, id, fromEmail, updateMethod) => {
             languages: site.languages,
             nearbyFoodPrograms: site.nearbyFoodPrograms,
             notesGovRequests: site.notesGovRequests,
-            notesAnythingElse: site.notesAnythingElse ? site.notesAnythingElse + '' : null,
+            notesAnythingElse: site.notesAnythingElse,
             createdMethod: updateMethod
         }
     };

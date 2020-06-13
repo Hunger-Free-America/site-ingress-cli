@@ -1,32 +1,29 @@
-export default (data, fields) => {
+import { Fields } from './parseFieldMap';
+
+export default (data, fields: Fields) => {
 
     // filter out rows where too many listed fields are empty
     // and turn the array of arrays into an array of objects
     return data.filter(row => {
         return row.filter(row => {
-            return fields.indexes.map((i: any) => row[i]);
+            return fields.indexes.map((i: number) => row[i]);
         }).filter(Boolean).length > 2;
     }).map(row => {
+
         // keep only cells from matching mapped columns & give airtable field names
-        const rowObject = Object.keys(fields.matched).reduce((out, field) => {
-            // key: airtable field, value: spreadsheet cell value at row index
-            let cell = row[fields.matched[field]];
-
-            // wrangle cell into a string and trim whitespace
-            if (cell && typeof cell !== 'undefined') {
-                cell = cell.toString().replace(/^\s*/, '').replace(/\s*$/, '');
+        const rowObject = Object.entries(fields.matched).reduce((out, [field, i]) => {
+            // trim whitespace and strip newlines & quotes at beginning & end
+            if (row[i]) {
+                out[field] = row[i].toString().replace(/\s/g, ' ').replace(/^"/, '').replace(/"$/, '').replace(/^\s+/, '').replace(/\s+$/, '');
+            } else {
+                out[field] = null;
             }
-
-            if (cell && cell.length > 0) {
-                out[field] = cell;
-            }
-
             return out;
         }, {});
 
         // add hard-coded fields (i.e. siteCountry: 'USA')
-        Object.keys(fields.unmatched).forEach(field => {
-            rowObject[field] = fields.unmatched[field];
+        Object.entries(fields.unmatched).forEach(([field, value]) => {
+            rowObject[field] = value;
         });
 
         return rowObject;

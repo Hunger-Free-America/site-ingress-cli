@@ -1,12 +1,18 @@
 /**
  * Takes as fieldMap `map` and matches it with the header columns of the data file
  */
-
-type Fields = {
-    [key: string]: any;
+type strNumHash = {
+    [key: string]: number;
+};
+type strStrHash = {
+    [key: string]: string;
 };
 
-export default (map, columns) => {
+export type Fields = {
+    matched: strNumHash, indexes: number[], unmatched: strStrHash, total: number;
+};
+
+export default (map: strStrHash, columns) => {
     /**
      * map matched fields to their column index while separating unmatched fields
      *
@@ -16,14 +22,12 @@ export default (map, columns) => {
      * out.total = max number of fields per object
      * CHEATCODE = a fieldMap value which forces a required field to be blank
      */
-    return Object.keys(map).reduce((out: Fields, field) => {
-
-        const value = map[field];
+    return Object.entries(map).reduce((out: Fields, [field, value]) => {
 
         if (value === 'CHEATCODE')
             return out;
 
-        const i = columns.findIndex(header => header === value);
+        const i: number = columns.findIndex(header => header === value);
 
         if (i > -1) {
             out.matched[field] = i;
