@@ -50,7 +50,6 @@ Airtable is clean and ready. Checking if the provided data contains sites which 
     siteList.forEach((site) => {
         // same formula as the one in AirTable to generate the 'unique' site identifier
         const siteID = `${site.siteName} - ${site.siteStreetAddress || ''}, ${site.siteCity || ''} ${site.siteState || ''} ${site.siteZip || ''}`;
-        console.log(siteID);
         if (originalSites[siteID]) {
             preExistingSitesCount += 1;
             // on pre-existing sites with non-empty details, add site details (with Site's record id) to preExistingSiteDetails array

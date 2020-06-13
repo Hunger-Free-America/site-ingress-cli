@@ -13,11 +13,10 @@ export default (data, fields: Fields) => {
         // keep only cells from matching mapped columns & give airtable field names
         const rowObject = Object.entries(fields.matched).reduce((out, [field, i]) => {
             // trim whitespace and strip newlines & quotes at beginning & end
-            if (row[i]) {
-                out[field] = row[i].toString().replace(/\s/g, ' ').replace(/^"/, '').replace(/"$/, '').replace(/^\s+/, '').replace(/\s+$/, '');
-            } else {
-                out[field] = null;
-            }
+            if (row[i]) out[field] = row[i].toString().replace(/\s/g, ' ').replace(/^"/, '').replace(/"$/, '').replace(/^\s+/, '').replace(/\s+$/, '');
+            // convert undefined & remaining empty strings to null
+            if (!row[i]) out[field] = null;
+
             return out;
         }, {});
 

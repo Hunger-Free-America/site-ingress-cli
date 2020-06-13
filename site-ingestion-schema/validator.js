@@ -13,7 +13,6 @@ const v = new Validator();
 module.exports = (data) => {
 
     return data.reduce((out, row) => {
-        // console.log(JSON.stringify(v.validate(row, dataSchema), undefined, 4));
         if (v.validate(row, dataSchema).valid) {
             row.hasDetails = v.validate(row, detailsSchema).valid;
             out.valid.push(row);
