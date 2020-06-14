@@ -79,7 +79,7 @@ All sites passed validation.`);
     }
 
     console.log(`
-Done converting, beginning push of ${checked.valid.length} records to site ingestion API... (lets see if your password worked ;P)`);
+Done converting ${checked.valid.length} records. Now connecting to Airtable API... (lets see if your password worked ;P)`);
 
     // attempt to push to Airtable
     await pushToAirtable(checked.valid, email, password);

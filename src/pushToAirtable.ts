@@ -108,7 +108,7 @@ Uploaded ${preExistingSiteDetails.length} new details for pre-existing sites. No
                     await detailsTable.create(tenSiteDetails, { typecast: true });
                 } catch (err) {
                     console.error(`
-Error creating siteDetails`);
+Error creating new siteDetails`);
                     throw err;
                 }
             });

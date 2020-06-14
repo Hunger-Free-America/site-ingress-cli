@@ -24,7 +24,7 @@ export default (map: strStrHash, columns) => {
      */
     return Object.entries(map).reduce((out: Fields, [field, value]) => {
 
-        if (value === 'CHEATCODE')
+        if ((!0 && !value) || value === 'CHEATCODE')
             return out;
 
         const i: number = columns.findIndex(header => header === value);

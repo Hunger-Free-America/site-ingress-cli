@@ -12,18 +12,21 @@ module.exports.dataSchema = {
         {
             properties: {
                 siteStreetAddress: { type: 'string', minLength: 3, maxLength: 183 }
-            }
+            },
+            required: ['siteStreetAddress']
         },
         {
             properties: {
                 siteZip: { type: 'string', minLength: 4, maxLength: 10 }
-            }
+            },
+            required: ['siteZip']
         },
         {
             properties: {
                 siteCity: { type: 'string', minLength: 3, maxLength: 183 },
                 siteState: { type: 'string', minLength: 2, maxLength: 2 }
-            }
+            },
+            required: ['siteCity', 'siteState']
         }
     ],
     throwError: false
@@ -32,204 +35,245 @@ module.exports.dataSchema = {
 module.exports.detailsSchema = {
     id: '/detailsSchema',
     type: 'object',
-    properties: this.dataSchema.properties,
-
+    properties: {
+        siteName: { type: 'string', minLength: 3, maxLength: 174 }
+    },
+    required: ['siteName'],
     // checks if any details fields exist
     anyOf: [
         {
             properties: {
-                publicContactMethod: { minLength: 3, maxLength: 174 }
-            }
+                publicContactMethod: { type: 'string', minLength: 3, maxLength: 174 }
+            },
+            required: ['publicContactMethod']
         },
         {
             properties: {
-                publicPhone: { minLength: 7, maxLength: 174 }
-            }
+                publicPhone: { type: 'string', minLength: 7, maxLength: 174 }
+            },
+            required: ['publicPhone']
         },
         {
             properties: {
-                publicEmail: { minLength: 6, maxLength: 255 }
-            }
+                publicEmail: { type: 'string', minLength: 6, maxLength: 255 }
+            },
+            required: ['publicEmail']
         },
         {
             properties: {
-                website: { minLength: 4, maxLength: 255 }
-            }
+                website: { type: 'string', minLength: 4, maxLength: 255 }
+            },
+            required: ['website']
         },
         {
             properties: {
-                socialMedia: { minLength: 3, maxLength: 255 }
-            }
+                socialMedia: { type: 'string', minLength: 3, maxLength: 255 }
+            },
+            required: ['socialMedia']
         },
         {
             properties: {
-                contactName: { minLength: 3, maxLength: 255 }
-            }
+                contactName: { type: 'string', minLength: 3, maxLength: 255 }
+            },
+            required: ['contactName']
         },
         {
             properties: {
-                contactPhone: { minLength: 7, maxLength: 174 }
-            }
+                contactPhone: { type: 'string', minLength: 7, maxLength: 174 }
+            },
+            required: ['contactPhone']
         },
         {
             properties: {
-                contactEmail: { minLength: 6, maxLength: 255 }
-            }
+                contactEmail: { type: 'string', minLength: 6, maxLength: 255 }
+            },
+            required: ['contactEmail']
         },
         {
             properties: {
-                status: { minLength: 4, maxLength: 255 }
-            }
+                status: { type: 'string', minLength: 4, maxLength: 255 }
+            },
+            required: ['status']
         },
         {
             properties: {
-                publicOpenness: { minLength: 3, maxLength: 255 }
-            }
+                publicOpenness: { type: 'string', minLength: 3, maxLength: 255 }
+            },
+            required: ['publicOpenness']
         },
         {
             properties: {
-                deliveryEligibility: { minLength: 3 }
-            }
+                deliveryEligibility: { type: 'string', minLength: 3 }
+            },
+            required: ['deliveryEligibility']
         },
         {
             properties: {
-                eligibilityRequirements: { minLength: 3 }
-            }
+                eligibilityRequirements: { type: 'string', minLength: 3 }
+            },
+            required: ['eligibilityRequirements']
         },
         {
             properties: {
-                hoursEligibility1: { minLength: 3 }
-            }
+                hoursEligibility1: { type: 'string', minLength: 3 }
+            },
+            required: ['hoursEligibility1']
         },
         {
             properties: {
-                hours1: { minLength: 3 }
-            }
+                hours1: { type: 'string', minLength: 3 }
+            },
+            required: ['hours1']
         },
         {
             properties: {
-                hoursEligibility2: { minLength: 3 }
-            }
+                hoursEligibility2: { type: 'string', minLength: 3 }
+            },
+            required: ['hoursEligibility2']
         },
         {
             properties: {
-                hours2: { minLength: 3 }
-            }
+                hours2: { type: 'string', minLength: 3 }
+            },
+            required: ['hours2']
         },
         {
             properties: {
-                hoursEligibility3: { minLength: 3 }
-            }
+                hoursEligibility3: { type: 'string', minLength: 3 }
+            },
+            required: ['hoursEligibility3']
         },
         {
             properties: {
-                hours3: { minLength: 3 }
-            }
+                hours3: { type: 'string', minLength: 3 }
+            },
+            required: ['hours3']
         },
         {
             properties: {
-                validUntil: { minLength: 3 }
-            }
+                validUntil: { type: 'string', minLength: 3 }
+            },
+            required: ['validUntil']
         },
         {
             properties: {
-                acceptsFoodDonations: { minLength: 1 }
-            }
+                acceptsFoodDonations: { type: 'string', minLength: 1 }
+            },
+            required: ['acceptsFoodDonations']
         },
         {
             properties: {
-                hasEnoughFood: { minLength: 1 }
-            }
+                hasEnoughFood: { type: 'string', minLength: 1 }
+            },
+            required: ['hasEnoughFood']
         },
         {
             properties: {
-                canReceiveBulk: { minLength: 1 }
-            }
+                canReceiveBulk: { type: 'string', minLength: 1 }
+            },
+            required: ['canReceiveBulk']
         },
         {
             properties: {
-                foodNeeds: { minLength: 3 }
-            }
+                foodNeeds: { type: 'string', minLength: 3 }
+            },
+            required: ['foodNeeds']
         },
         {
             properties: {
-                hasBabyFormula: { minLength: 1 }
-            }
+                hasBabyFormula: { type: 'string', minLength: 1 }
+            },
+            required: ['hasBabyFormula']
         },
         {
             properties: {
-                staffVolunteerNeeds: { minLength: 1 }
-            }
+                staffVolunteerNeeds: { type: 'string', minLength: 1 }
+            },
+            required: ['staffVolunteerNeeds']
         },
         {
             properties: {
-                recruitingAssistance: { minLength: 3 }
-            }
+                recruitingAssistance: { type: 'string', minLength: 3 }
+            },
+            required: ['recruitingAssistance']
         },
         {
             properties: {
-                otherNeeds: { minLength: 3 }
-            }
+                otherNeeds: { type: 'string', minLength: 3 }
+            },
+            required: ['otherNeeds']
         },
         {
             properties: {
-                covidChanges: { minLength: 3 }
-            }
+                covidChanges: { type: 'string', minLength: 3 }
+            },
+            required: ['covidChanges']
         },
         {
             properties: {
-                increasedDemandCauses: { minLength: 3 }
-            }
+                increasedDemandCauses: { type: 'string', minLength: 3 }
+            },
+            required: ['increasedDemandCauses']
         },
         {
             properties: {
-                totalFoodCommunityNeeds: { minLength: 3 }
-            }
+                totalFoodCommunityNeeds: { type: 'string', minLength: 3 }
+            },
+            required: ['totalFoodCommunityNeeds']
         },
         {
             properties: {
-                currentCapacity: { minLength: 2 }
-            }
+                currentCapacity: { type: 'string', minLength: 2 }
+            },
+            required: ['currentCapacity']
         },
         {
             properties: {
-                staffVolunteerReduction: { minLength: 1 }
-            }
+                staffVolunteerReduction: { type: 'string', minLength: 1 }
+            },
+            required: ['staffVolunteerReduction']
         },
         {
             properties: {
-                safetyPrecautions: { minLength: 3 }
-            }
+                safetyPrecautions: { type: 'string', minLength: 3 }
+            },
+            required: ['safetyPrecautions']
         },
         {
             properties: {
-                languages: { minLength: 2 }
-            }
+                languages: { type: 'string', minLength: 2 }
+            },
+            required: ['languages']
         },
         {
             properties: {
-                nearbyFoodPrograms: { minLength: 3 }
-            }
+                nearbyFoodPrograms: { type: 'string', minLength: 3 }
+            },
+            required: ['nearbyFoodPrograms']
         },
         {
             properties: {
-                notesGovRequests: { minLength: 3 }
-            }
+                notesGovRequests: { type: 'string', minLength: 3 }
+            },
+            required: ['notesGovRequests']
         },
         {
             properties: {
-                notesAnythingElse: { minLength: 3 }
-            }
+                notesAnythingElse: { type: 'string', minLength: 3 }
+            },
+            required: ['notesAnythingElse']
         },
         {
             properties: {
-                stockStatus: { minLength: 1 }
-            }
+                stockStatus: { type: 'string', minLength: 1 }
+            },
+            required: ['stockStatus']
         },
         {
             properties: {
-                reminderMethod: { minLength: 3, maxLength: 255 }
-            }
+                reminderMethod: { type: 'string', minLength: 3, maxLength: 255 }
+            },
+            required: ['reminderMethod']
         }
     ],
     throwError: false
