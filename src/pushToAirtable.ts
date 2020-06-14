@@ -29,8 +29,10 @@ Pulling Airtable Sites table to check if ready & clean, and to use for pre-exist
     console.log(`
 Fetched ${Object.keys(originalSites).length} rows from the sites table. Checking if duplicates exist within Airtable itself...`);
 
-    // returns an object with keys:siteIDs & values:airtableRecordIDs
+    // Returns an object with keys:siteIDs & values:airtableRecordIDs
     originalSites = await originalSites.reduce((out, record, i) => {
+
+        // Find if two originalSites have the same 'unique' identifier (see const siteID below)
         if (originalSites.findIndex(aRecord => aRecord.fields.siteID === record.fields.siteID) !== i) {
             throw new Error(`
 
@@ -40,19 +42,22 @@ To prevent unintended consequences, remove existing duplicates in the Airtable S
 `);
         }
         out[record.fields.siteID] = record.id;
+
         return out;
     }, {});
 
     console.log(`
 Airtable is clean and ready. Checking if the provided data contains sites which already exist on Airtable...`);
 
-    // filter out siteDetails corresponding to pre-existing sites to upload separately
+    // Filter out siteDetails corresponding to pre-existing sites to upload separately
     siteList.forEach((site) => {
-        // same formula as the one in AirTable to generate the 'unique' site identifier
+
+        // Generate the 'unique' site identifier w/ the same formula as Airtable
         const siteID = `${site.siteName} - ${site.siteStreetAddress || ''}, ${site.siteCity || ''} ${site.siteState || ''} ${site.siteZip || ''}`;
         if (originalSites[siteID]) {
             preExistingSitesCount += 1;
-            // on pre-existing sites with non-empty details, add site details (with Site's record id) to preExistingSiteDetails array
+
+            // On pre-existing sites with non-empty details, add site details (with Site's record id) to preExistingSiteDetails array
             if (site.hasDetails) {
                 const details = populateDetailsFields(site, originalSites[siteID], email, updateMethod);
                 preExistingSiteDetails.push(details);
@@ -96,19 +101,22 @@ Uploaded ${preExistingSiteDetails.length} new details for pre-existing sites. No
     for (let i = 0; i < newSites.length; i += 10) {
         const tenSites = newSites.slice(i, i + 10 < newSites.length ? i + 10 : newSites.length);
         const tenSiteLocations = tenSites.map((site) => populateSiteFields(site, email, updateMethod));
-
         try {
+
             // Push 10 Sites to Airtable & use resultant Airtable record IDs to populate & push siteDetails objects
             await sitesTable.create(tenSiteLocations, { typecast: true }).then(async records => {
                 try {
+
                     // Create the 10 siteDetails objects with corresponding Site record IDs
                     const tenSiteDetails = records.reduce((out, record, j) => {
+
                         // Skip uploading details on sites where there are none
                         if (tenSites[j].hasDetails) {
                             const details = populateDetailsFields(tenSites[j], record.id, email, updateMethod);
                             out.push(details);
                             newDetailsCount += 1;
                         }
+
                         return out;
                     }, []);
                     if (tenSiteDetails.length) await detailsTable.create(tenSiteDetails, { typecast: true });
