@@ -1,3 +1,8 @@
+/**
+ * Filter out rows where too many (more than 2) mapped fields are empty,
+ * tidy up strings, & turn the array of arrays into an array of objects
+ */
+
 import { Fields } from './parseFieldMap';
 
 export default (data, fields: Fields) => {

@@ -1,27 +1,27 @@
 /**
  * Takes as fieldMap `map` and matches it with the header columns of the data file
  */
+
 type strNumHash = {
     [key: string]: number;
 };
 type strStrHash = {
     [key: string]: string;
 };
-
 export type Fields = {
     matched: strNumHash, indexes: number[], unmatched: strStrHash, total: number;
 };
 
+/**
+ * Map matched fields to their column index while separating unmatched fields
+ *
+ * out.matched[airtable field] = index of corresponding spreadsheet column
+ * out.indexes = list of indexes of necessary spreadsheet columns
+ * out.unmatched[airtable field] = value to hard-code
+ * out.total = max number of fields per object
+ * CHEATCODE = a fieldMap value which forces a required field to be blank
+ */
 export default (map: strStrHash, columns) => {
-    /**
-     * map matched fields to their column index while separating unmatched fields
-     *
-     * out.matched[airtable field] = index of corresponding spreadsheet column
-     * out.indexes = list of indexes of necessary spreadsheet columns
-     * out.unmatched[airtable field] = value to hard-code
-     * out.total = max number of fields per object
-     * CHEATCODE = a fieldMap value which forces a required field to be blank
-     */
     return Object.entries(map).reduce((out: Fields, [field, value]) => {
 
         if ((!0 && !value) || value === 'CHEATCODE')

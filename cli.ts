@@ -62,7 +62,7 @@ Parsing directory '${path}'...`);
         throw missingFieldMap;
     }
 
-    // check if sites conform to schema
+    // Check if sites conform to schema
     const checked = validate(data);
     if (!checked.valid.length) {
         throw new Error(`
@@ -72,7 +72,8 @@ No sites passed validation. Aborting.
         console.error(`
 ${checked.invalid.length} sites did not pass validation and will not be included:`);
         // eslint-disable-next-line no-undefined
-        console.error(`${JSON.stringify(checked.invalid, undefined, 4)}`);
+        console.error(`${JSON.stringify(checked.invalid, undefined, 4)}
+(^^ ${checked.invalid.length} sites that did not pass validation ^^)`);
     } else {
         console.log(`
 All sites passed validation.`);
@@ -81,7 +82,7 @@ All sites passed validation.`);
     console.log(`
 Done converting ${checked.valid.length} records. Now connecting to Airtable API... (lets see if your password worked ;P)`);
 
-    // attempt to push to Airtable
+    // Attempt to push to Airtable
     await pushToAirtable(checked.valid, email, password);
 
     console.log(`
