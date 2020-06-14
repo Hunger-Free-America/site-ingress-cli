@@ -72,8 +72,16 @@ The provided data contains ${preExistingSitesCount} pre-existing sites and ${pre
      * Their API's rate limit is an issue so we use await inside the loop to slow it down.
      */
     for (let i = 0; i < preExistingSiteDetails.length; i += 10) {
-        const batch = preExistingSiteDetails.slice(i, i + 10 < preExistingSiteDetails.length ? i + 10 : preExistingSiteDetails.length);
-        await detailsTable.create(batch, { typecast: true });
+        try {
+            const batch = preExistingSiteDetails.slice(i, i + 10 < preExistingSiteDetails.length ? i + 10 : preExistingSiteDetails.length);
+            if (batch.length) await detailsTable.create(batch, { typecast: true });
+            if (i && i % 100 === 0 || i === preExistingSiteDetails.length) console.log(`
+Created ${i} of ${preExistingSiteDetails.length} preExistingSiteDetails`);
+        } catch (err) {
+            console.error(`
+Error creating preExistingSiteDetails`);
+            throw err;
+        }
     }
 
     console.log(`
@@ -90,22 +98,22 @@ Uploaded ${preExistingSiteDetails.length} new details for pre-existing sites. No
         const tenSiteLocations = tenSites.map((site) => populateSiteFields(site, email, updateMethod));
 
         try {
-            // Push 10 Sites to Airtable, save resultant Airtable record IDs for attaching siteDetails,
-            // then populate & push siteDetails objects to Airtable
+            // Push 10 Sites to Airtable & use resultant Airtable record IDs to populate & push siteDetails objects
             await sitesTable.create(tenSiteLocations, { typecast: true }).then(async records => {
                 try {
-                    // create the 10 siteDetails objects with corresponding Site record IDs
-                    const tenSiteDetails = records.reduce((out, record, i) => {
-                        // skip uploading details on sites where there are none
-                        if (tenSites[i].hasDetails) {
-                            const details = populateDetailsFields(tenSites[i], record.id, email, updateMethod);
+                    // Create the 10 siteDetails objects with corresponding Site record IDs
+                    const tenSiteDetails = records.reduce((out, record, j) => {
+                        // Skip uploading details on sites where there are none
+                        if (tenSites[j].hasDetails) {
+                            const details = populateDetailsFields(tenSites[j], record.id, email, updateMethod);
                             out.push(details);
                             newDetailsCount += 1;
                         }
                         return out;
                     }, []);
-
-                    await detailsTable.create(tenSiteDetails, { typecast: true });
+                    if (tenSiteDetails.length) await detailsTable.create(tenSiteDetails, { typecast: true });
+                    if (i && i % 100 === 0 || i === newSites.length) console.log(`
+Created ${i} of ${newSites.length} new Sites and ${newDetailsCount} new site Details`);
                 } catch (err) {
                     console.error(`
 Error creating new siteDetails`);
