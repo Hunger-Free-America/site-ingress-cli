@@ -284,7 +284,6 @@ module.exports.populateSiteFields = (site, fromEmail, updateMethod) => {
         fields: {
             uploadedBy: { email: fromEmail },
             siteName: site.siteName,
-            EFROID: site.EFROID,
             siteStreetAddress: site.siteStreetAddress,
             siteCity: site.siteCity,
             siteState: site.siteState,
@@ -296,6 +295,8 @@ module.exports.populateSiteFields = (site, fromEmail, updateMethod) => {
             siteSubType: site.siteSubType,
             lat: site.lat,
             lng: site.lng,
+            EIN: site.EIN,
+            EFROID: site.EFROID,
             createdMethod: updateMethod
         }
     };
@@ -307,6 +308,8 @@ module.exports.populateDetailsFields = (site, id, fromEmail, updateMethod) => {
             Site: [id],
             uploadedBy: { email: fromEmail },
             status: site.status,
+            stockStatus: site.stockStatus,
+            reminderMethod: site.reminderMethod,
             contactName: site.contactName,
             contactPhone: site.contactPhone,
             contactEmail: site.contactEmail,
