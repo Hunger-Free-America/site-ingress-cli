@@ -3,6 +3,7 @@
  *
  * Expect data format to be an array of objects, each with a site, siteDetails field
  */
+'use strict';
 
 const { dataSchema, detailsSchema } = require('./schema');
 const Validator = require('jsonschema').Validator;
